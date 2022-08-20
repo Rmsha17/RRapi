@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/readrix123/databases/ReadRix",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:readrix123.database.windows.net",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}
