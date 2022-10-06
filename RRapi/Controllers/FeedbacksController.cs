@@ -23,9 +23,18 @@ namespace RRapi.Controllers
             return db.Feedbacks.OrderByDescending(x=>x.FEEDBACK_ID);
         }
          [Route("api/Feedback/getartfeedbacks")]
-        public IQueryable<Feedback> GetArtFeedbacks(int id)
+        public List<Feedback> GetArtFeedbacks(int id)
         {
-            return db.Feedbacks.Where(x=>x.ARTIFACT_FID == id && x.FEEDBACK_FID == null).OrderByDescending(x=>x.FEEDBACK_ID);
+          var list =db.Feedbacks.Where(x=>x.ARTIFACT_FID == id && x.FEEDBACK_FID == null).OrderByDescending(x=>x.FEEDBACK_ID);
+          var RefinedList = new List<Feedback>();
+            foreach (var item in list)
+            {
+                var cat = db.Readers.Where(x => x.READER_ID == item.READER_FID).FirstOrDefault();
+                item.READER_NAME = cat.READER_NAME;
+                item.READER_IMAGE = cat.READER_IMAGE;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
 
         // GET: api/Feedbacks/5

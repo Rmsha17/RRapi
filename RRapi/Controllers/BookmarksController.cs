@@ -37,10 +37,19 @@ namespace RRapi.Controllers
           // GET: api/Bookmarks/5
         [ResponseType(typeof(Bookmark))]
         [Route("api/Bookmark/getllist")]
-        public IQueryable<Bookmark> GetReaderBookmark(int id)
+        public List<Artifact> GetReaderBookmark(int id)
         {
-            return db.Bookmarks.Where(x=>x.READER_FID == id);
-          
+            var list = db.Bookmarks.Where(x=>x.READER_FID == id);
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var art = db.Artifacts.Where(x => x.ARTIFACT_ID == item.ARTIFACT_FID).FirstOrDefault();
+                art.Bookmarkid = item.BOOKMARK_ID;
+                var subcat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == art.SUB_CATEGORY_FID).FirstOrDefault();
+                art.SubCategory_Name = subcat.SUB_CATEGORY_NAME;
+                RefinedList.Add(art);
+            }
+            return RefinedList;
         }
 
         // PUT: api/Bookmarks/5

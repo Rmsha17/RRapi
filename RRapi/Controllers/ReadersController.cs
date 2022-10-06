@@ -29,15 +29,31 @@ namespace RRapi.Controllers
         }
         // GET: api/Readers
         [Route("api/readers/getorderhistory")]
-        public IQueryable<Order> Getorderhistory(int id)
+        public List<Order> Getorderhistory(int id)
         {
-            return db.Orders.Where(x => x.ORDER_TYPE == "Sale" && x.ORDER_STATUS == "Booked" && x.READER_FID == id);
+            var list = db.Orders.Where(x => x.ORDER_TYPE == "Sale" && x.ORDER_STATUS == "Booked" && x.READER_FID == id);
+            var RefinedList = new List<Order>();
+            foreach (var item in list)
+            {
+                var cat = db.Readers.Where(x => x.READER_ID == item.READER_FID).FirstOrDefault();
+                item.Reader_Name = cat.READER_NAME ;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
         // GET: api/Readers
         [Route("api/readers/getordercancel")]
-        public IQueryable<Order> Getordercancel(int id)
+        public List<Order> Getordercancel(int id)
         {
-            return db.Orders.Where(x => x.ORDER_TYPE == "Sale" && x.ORDER_STATUS == "Cancelled" && x.READER_FID == id);
+          var list = db.Orders.Where(x => x.ORDER_TYPE == "Sale" && x.ORDER_STATUS == "Cancelled" && x.READER_FID == id);
+            var RefinedList = new List<Order>();
+            foreach (var item in list)
+            {
+                var cat = db.Readers.Where(x => x.READER_ID == item.READER_FID).FirstOrDefault();
+                item.Reader_Name = cat.READER_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
 
         // GET: api/Readers/5

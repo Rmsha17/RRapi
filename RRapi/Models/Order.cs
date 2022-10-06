@@ -40,5 +40,8 @@ namespace RRapi.Models
         public virtual ICollection<Order_Details> Order_Details { get; set; }
         [JsonIgnore]
         public virtual Reader Reader { get; set; }
+        [NotMapped]
+        public string Reader_Name { get; set; }
+
     }
 }

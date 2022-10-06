@@ -45,5 +45,10 @@ namespace RRapi.Models
         public virtual Feedback Feedback2 { get; set; }
         [JsonIgnore]
         public virtual Reader Reader { get; set; }
+        [NotMapped]
+        public string READER_NAME { get; set; }
+        [NotMapped]
+        public string READER_IMAGE { get; set; }
+
     }
 }

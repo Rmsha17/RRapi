@@ -25,9 +25,21 @@ namespace RRapi.Controllers
         }
         [HttpGet]
         [Route("api/Artifact/invoice")]
-        public IQueryable<Order_Details> Invoice(int id)
+        public List<Artifact> Invoice(int id)
         {
-            return db.Order_Details.Where(x => x.ORDER_FID == id);
+            var list = db.Order_Details.Where(x => x.ORDER_FID == id);
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var shopart = db.ShopArtifacts.Where(x => x.ID == item.SHOPARTIFACT_FID).FirstOrDefault();
+                var art = db.Artifacts.Where(x => x.ARTIFACT_ID == shopart.ARTIFACT_FID).FirstOrDefault();
+                art.shopartidactid = shopart.ID;
+                art.PURCHASE_PRICE = shopart.PURCHASE_PRICE;
+                art.SALE_PRICE = shopart.SALE_PRICE;
+                RefinedList.Add(art);
+            }
+            return RefinedList;
+
         }
         [Route("api/Artifact/topratedcomics")]
         public List<Artifact> GetratedArtifacts()
