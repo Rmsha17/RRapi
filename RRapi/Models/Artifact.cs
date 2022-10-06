@@ -74,5 +74,17 @@ namespace RRapi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         [JsonIgnore]
         public virtual ICollection<View> Views { get; set; }
+        [NotMapped]
+        public int shopartidactid { get; set; }
+        [NotMapped]
+        public int? Bookmarkid { get; set; }
+        [NotMapped]
+        public decimal PURCHASE_PRICE { get; set; }
+        [NotMapped]
+        public decimal SALE_PRICE { get; set; }
+        [NotMapped]
+        public string SubCategory_Name { get; set; }
+
+
     }
 }

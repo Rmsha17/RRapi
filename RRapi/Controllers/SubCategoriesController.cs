@@ -29,9 +29,17 @@ namespace RRapi.Controllers
             
         }
          [Route("api/Artifact/getartifactbysubid")]
-        public IQueryable<Artifact> Getartifactsbyid(int id)
+        public List<Artifact> Getartifactsbyid(int id)
         {
-            return db.Artifacts.Where(x => x.SUB_CATEGORY_FID == id);
+            var list =db.Artifacts.Where(x => x.SUB_CATEGORY_FID == id);
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
             
         }
 

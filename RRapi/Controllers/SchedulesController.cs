@@ -39,10 +39,18 @@ namespace RRapi.Controllers
         // GET: api/Schedules/5
         [ResponseType(typeof(Schedule))]
         [Route("api/schedule/getartifactbyid")]
-        public IQueryable<Artifact> Getartifactbyid(int id)
+        public List<Artifact> Getartifactbyid(int id)
         {
-            return db.Artifacts.Where(x => x.SCHEDULE_FID == id);
            
+            var list= db.Artifacts.Where(x => x.SCHEDULE_FID == id);
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
 
         // PUT: api/Schedules/5

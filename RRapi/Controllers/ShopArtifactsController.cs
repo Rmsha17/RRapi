@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Newtonsoft.Json;
 using RRapi.Models;
 
 namespace RRapi.Controllers
@@ -18,9 +20,19 @@ namespace RRapi.Controllers
 
         // GET: api/ShopArtifacts
         [Route("api/ShopArtifacts/getshopartifacts")]
-        public IQueryable<ShopArtifact> GetShopArtifacts()
+        public List<Artifact> GetShopArtifacts()
         {
-            return db.ShopArtifacts;
+            var list = db.ShopArtifacts;
+            List<Artifact> RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.Artifacts.Where(x => x.ARTIFACT_ID == item.ARTIFACT_FID).FirstOrDefault();
+                cat.SALE_PRICE = item.SALE_PRICE;
+                cat.shopartidactid =item.ID;
+                cat.PURCHASE_PRICE=item.PURCHASE_PRICE ;
+                RefinedList.Add(cat);
+            }
+            return RefinedList;
         }
 
         // GET: api/ShopArtifacts/5

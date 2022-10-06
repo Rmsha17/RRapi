@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Newtonsoft.Json;
+using OpenXmlPowerTools;
 using RRapi.Models;
 
 namespace RRapi.Controllers
@@ -28,46 +30,92 @@ namespace RRapi.Controllers
             return db.Order_Details.Where(x => x.ORDER_FID == id);
         }
         [Route("api/Artifact/topratedcomics")]
-        public IQueryable<Artifact> GetratedArtifacts()
+        public List<Artifact> GetratedArtifacts()
         {
-            var list = db.Artifacts.Where(x => x.SubCategory.Category.CATEGORY_NAME == "Comics");
-            return list.OrderByDescending(x => x.Views.Count()).Take(6);
+            var list = db.Artifacts.Where(x => x.SubCategory.Category.CATEGORY_NAME == "Comics").OrderByDescending(x => x.Views.Count()).Take(6);
+            
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
         [Route("api/Artifact/topratednovels")]
-        public IQueryable<Artifact> GetratedNArtifacts()
+        public List<Artifact> GetratedNArtifacts()
         {
-            var list = db.Artifacts.Where(x => x.SubCategory.Category.CATEGORY_NAME == "Novels");
-            return list.OrderByDescending(x => x.Views.Count()).Take(6);
+            var list = db.Artifacts.Where(x => x.SubCategory.Category.CATEGORY_NAME == "Novels").OrderByDescending(x => x.Views.Count()).Take(6);
 
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
         [Route("api/Artifact/topratedromance")]
-        public IQueryable<Artifact> GetratedRArtifacts()
+        public List<Artifact> GetratedRArtifacts()
         {
-            var list = db.Artifacts.Where(x => x.SubCategory.SUB_CATEGORY_NAME == "Romance");
-            return list.OrderByDescending(x => x.Views.Count()).Take(6);
+           
 
+            var list = db.Artifacts.Where(x => x.SubCategory.SUB_CATEGORY_NAME == "Romance").OrderByDescending(x => x.Views.Count()).Take(6);
+
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
         [Route("api/Artifact/topratedhorror")]
-        public IQueryable<Artifact> GetratedComedyArtifacts()
+        public List<Artifact> GetratedComedyArtifacts()
         {
-            var list = db.Artifacts.Where(x => x.SubCategory.SUB_CATEGORY_NAME == "Horror");
-            return list.OrderByDescending(x => x.Views.Count()).Take(6);
+           
+            var list = db.Artifacts.Where(x => x.SubCategory.SUB_CATEGORY_NAME == "Horror").OrderByDescending(x => x.Views.Count()).Take(6);
+
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
 
         }
         [Route("api/Artifact/topfeatured")]
-        public IQueryable<Artifact> GetratedFeaturedArtifacts()
+        public List<Artifact> GetratedFeaturedArtifacts()
         {
+            var list = db.Artifacts.OrderByDescending(x => x.Views.Count()).Take(6);
 
-            var list = db.Artifacts;
-            return list.OrderByDescending(x => x.Views.Count()).Take(6);
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
         [Route("api/Artifact/topnewest")]
-        public IQueryable<Artifact> GetratednewestArtifacts()
+        public List<Artifact> GetratednewestArtifacts()
         {
+            var list = db.Artifacts.OrderByDescending(x => x.ARTIFACT_ID).Take(6);
 
-            var list = db.Artifacts;
-            return list.OrderByDescending(x => x.ARTIFACT_ID).Take(6);
-           
+            var RefinedList = new List<Artifact>();
+            foreach (var item in list)
+            {
+                var cat = db.SubCategories.Where(x => x.SUB_CATEGORY_ID == item.SUB_CATEGORY_FID).FirstOrDefault();
+                item.SubCategory_Name = cat.SUB_CATEGORY_NAME;
+                RefinedList.Add(item);
+            }
+            return RefinedList;
         }
 
         // GET: api/Artifacts/5
