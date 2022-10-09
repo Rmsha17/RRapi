@@ -25,5 +25,12 @@ namespace RRapi.Models
         public virtual Order Order { get; set; }
         [JsonIgnore]
         public virtual ShopArtifact ShopArtifact { get; set; }
+        [NotMapped]
+        public string ARTIFACT_NAME { get; set; }
+        [NotMapped]
+        public string ARTIFACT_IMAGE { get; set; }
+        [NotMapped]
+        public decimal Total { get; set; }
+       
     }
 }

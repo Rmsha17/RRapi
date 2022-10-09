@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Newtonsoft.Json;
 using RRapi.Models;
@@ -29,7 +30,10 @@ namespace RRapi.Controllers
                 var cat = db.Artifacts.Where(x => x.ARTIFACT_ID == item.ARTIFACT_FID).FirstOrDefault();
                 cat.SALE_PRICE = item.SALE_PRICE;
                 cat.shopartidactid =item.ID;
-                cat.PURCHASE_PRICE=item.PURCHASE_PRICE ;
+                cat.PURCHASE_PRICE=item.PURCHASE_PRICE;
+                var purchaseorder = db.Order_Details.Where(x => x.SHOPARTIFACT_FID == item.ID && x.Order.ORDER_TYPE == "Purchase").Sum(x => (int?)x.QUANTITY);
+                var saleorder = db.Order_Details.Where(x => x.SHOPARTIFACT_FID == item.ID && x.Order.ORDER_TYPE == "Sale").Sum(x => (int?)x.QUANTITY);
+                cat.Available_Quantity = (purchaseorder + saleorder);
                 RefinedList.Add(cat);
             }
             return RefinedList;

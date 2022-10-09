@@ -84,6 +84,8 @@ namespace RRapi.Models
         public decimal SALE_PRICE { get; set; }
         [NotMapped]
         public string SubCategory_Name { get; set; }
+        [NotMapped]
+        public int? Available_Quantity { get; set; }
 
 
     }

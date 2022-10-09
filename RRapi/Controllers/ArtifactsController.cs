@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using DocumentFormat.OpenXml.Vml;
 using Newtonsoft.Json;
 using OpenXmlPowerTools;
 using RRapi.Models;
@@ -25,18 +26,19 @@ namespace RRapi.Controllers
         }
         [HttpGet]
         [Route("api/Artifact/invoice")]
-        public List<Artifact> Invoice(int id)
+        public List<Order_Details> Invoice(int id)
         {
             var list = db.Order_Details.Where(x => x.ORDER_FID == id);
-            var RefinedList = new List<Artifact>();
+            var RefinedList = new List<Order_Details>();
             foreach (var item in list)
             {
                 var shopart = db.ShopArtifacts.Where(x => x.ID == item.SHOPARTIFACT_FID).FirstOrDefault();
                 var art = db.Artifacts.Where(x => x.ARTIFACT_ID == shopart.ARTIFACT_FID).FirstOrDefault();
-                art.shopartidactid = shopart.ID;
-                art.PURCHASE_PRICE = shopart.PURCHASE_PRICE;
-                art.SALE_PRICE = shopart.SALE_PRICE;
-                RefinedList.Add(art);
+                item.ARTIFACT_NAME = art.ARTIFACT_NAME;
+                item.ARTIFACT_IMAGE = art.ARTIFACT_PICTURE;
+                item.QUANTITY = Math.Abs(item.QUANTITY);
+                item.Total = Math.Abs(item.QUANTITY) * item.ARTIFACT_SALEPRICE;
+                RefinedList.Add(item);
             }
             return RefinedList;
 

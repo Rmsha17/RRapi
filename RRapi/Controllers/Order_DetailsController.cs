@@ -34,6 +34,21 @@ namespace RRapi.Controllers
 
             return Ok(order_Details);
         }
+        // GET: api/Order_Details/5
+        [Route("api/Order_Details/ArtifactQuantity")]
+        [ResponseType(typeof(int))]
+        public IHttpActionResult Get_quantity(int id)
+        {
+            var purchaseorder = db.Order_Details.Where(x => x.SHOPARTIFACT_FID == id && x.Order.ORDER_TYPE == "Purchase").Sum(x => (int?)x.QUANTITY);
+            var saleorder = db.Order_Details.Where(x => x.SHOPARTIFACT_FID == id && x.Order.ORDER_TYPE == "Sale").Sum(x => (int?)x.QUANTITY);
+            var result = (purchaseorder + saleorder);
+  
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result); 
+        }
 
         // PUT: api/Order_Details/5
         [ResponseType(typeof(void))]
@@ -115,5 +130,13 @@ namespace RRapi.Controllers
         {
             return db.Order_Details.Count(e => e.ORDERDETAIL_ID == id) > 0;
         }
+
+        //[HttpGet] 
+        //private int? ArtifactQuantity(int id)
+        //{
+        //    var purchaseorder = db.Order_Details.Where(x => x.SHOPARTIFACT_FID == id && x.Order.ORDER_TYPE == "Purchase").Sum(x => (int?)x.QUANTITY);
+        //    var saleorder = db.Order_Details.Where(x => x.SHOPARTIFACT_FID == id && x.Order.ORDER_TYPE == "Sale").Sum(x => (int?)x.QUANTITY);
+        //    return  (purchaseorder - saleorder) ;
+        //}
     }
 }

@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
-using DocumentFormat.OpenXml.Office.CustomUI;
-
-using OpenXmlPowerTools;
+using Firebase.Storage;
 using RRapi.Models;
 
 namespace RRapi.Controllers
@@ -200,16 +198,50 @@ namespace RRapi.Controllers
             return db.Readers.Count(e => e.READER_ID == id) > 0;
         }
 
-
         [HttpPost]
         [Route("api/readers/postimage")]
+        public async Task<string> PostcloudImage()
+        {
+
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                if (httpRequest.Files.Count > 0)
+                {
+                    foreach (string file1 in httpRequest.Files)
+                    {
+                        var postedFile = httpRequest.Files[file1];
+
+                        var fileName = postedFile.FileName.Split('\\').LastOrDefault().Split('/').LastOrDefault();
+
+                        var stroageImage = await new FirebaseStorage("readrixfiles.appspot.com")
+                        .Child("ItemImages")
+                               .Child(Guid.NewGuid().ToString() + fileName)
+                               .PutAsync(postedFile.InputStream);
+                        string imgurl = stroageImage;
+                        return imgurl;
+
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                return exception.Message + " - Server Error";
+            }
+
+            return "No Image Found or Somthing Went Wrong";
+        }
+
+
+
+        [HttpPost]
+        [Route("api/reader/postserverimage")]
         public string PostImage()
         {
 
             try
             {
                 var httpRequest = HttpContext.Current.Request;
-
 
                 if (httpRequest.Files.Count > 0)
                 {
